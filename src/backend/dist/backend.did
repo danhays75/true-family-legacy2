@@ -1,0 +1,47 @@
+type FamilyRecord = 
+ record {
+   canisterId: principal;
+   createdAt: int;
+   familyId: text;
+   parentFamilyId: opt text;
+   rootName: text;
+ };
+type EdgeRecord = 
+ record {
+   fromFamilyId: text;
+   kind: EdgeKind;
+   toFamilyId: text;
+   viaPersonName: text;
+ };
+type EdgeKind = 
+ variant {
+   childOf;
+   spouseOriginOf;
+ };
+service : {
+  /// Add a relationship edge between two existing families.
+  linkFamilies: (fromFamilyId: text, toFamilyId: text, kind: EdgeKind,
+   viaPersonName: text) -> (variant {
+                              err: text;
+                              ok;
+                            });
+  /// Return all relationship edges.
+  listEdges: () -> (vec EdgeRecord) query;
+  /// Return all registered family records.
+  listFamilies: () -> (vec FamilyRecord) query;
+  /// Call the child canister's whoAmI() and return its response.
+  pingChild: (familyId: text) -> (variant {
+                                    err: text;
+                                    ok: text;
+                                  });
+  /// Create a new child Family canister, fund it, register it, and optionally
+  /// add a #childOf edge to the parent family.
+  plantTree: (rootName: text, parentFamilyId: opt text) ->
+   (variant {
+      err: text;
+      ok: record {
+            text;
+            principal;
+          };
+    });
+}

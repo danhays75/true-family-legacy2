@@ -1,0 +1,21 @@
+{
+  "overview": "A multi-canister factory skeleton that proves the factory spawn, register, link, and inter-canister call pattern works end-to-end on the Internet Computer. The factory canister dynamically creates independent child Family canisters, registers them, links them with typed relationship edges, and can call into them — all observable through a minimal admin harness UI.",
+  "features": [
+    "Factory canister spawns independent child Family canisters via the management canister",
+    "Each child canister has its own isolated state (rootName, familyId)",
+    "Family registry with full record: familyId, canister id, rootName, parent, timestamp",
+    "Relationship edges between families (childOf / spouseOriginOf) with manual and auto-linking",
+    "Inter-canister ping: factory calls child's whoAmI to prove addressability",
+    "Minimal admin harness: Plant a tree form, Families table with inline Ping, Edges table, Link families form"
+  ],
+  "category": "diagnostic-architecture-proof",
+  "tags": [
+    "factory-pattern",
+    "multi-canister",
+    "motoko",
+    "internet-computer",
+    "diagnostic",
+    "family-tree"
+  ],
+  "last_updated": "2026-05-18T00:23:25.569Z"
+}
