@@ -23,6 +23,7 @@ export default function App() {
   const [families, setFamilies] = useState<FamilyRecord[]>([]);
   const [edges, setEdges] = useState<EdgeRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [buildStamp, setBuildStamp] = useState("");
 
   // Plant Tree form
   const [plantRootName, setPlantRootName] = useState("");
@@ -62,13 +63,16 @@ export default function App() {
 
   useEffect(() => {
     if (!actor) return;
-    Promise.all([actor.listFamilies(), actor.listEdges()]).then(
-      ([fams, eds]) => {
-        setFamilies(fams);
-        setEdges(eds);
-        setLoading(false);
-      },
-    );
+    Promise.all([
+      actor.listFamilies(),
+      actor.listEdges(),
+      actor.getBuildStamp(),
+    ]).then(([fams, eds, stamp]) => {
+      setFamilies(fams);
+      setEdges(eds);
+      setBuildStamp(stamp);
+      setLoading(false);
+    });
   }, [actor]);
 
   async function handlePlant(e: React.FormEvent) {
@@ -172,9 +176,14 @@ export default function App() {
         fontFamily: "monospace",
       }}
     >
-      <h1 style={{ fontSize: 18, fontWeight: "bold", marginBottom: 24 }}>
+      <h1 style={{ fontSize: 18, fontWeight: "bold", marginBottom: 8 }}>
         True Family Legacy — Factory Diagnostic Harness
       </h1>
+      {buildStamp && (
+        <p style={{ fontSize: 12, marginBottom: 24, fontFamily: "monospace" }}>
+          Factory build: {buildStamp}
+        </p>
+      )}
 
       {/* SECTION 1: Plant a Tree */}
       <section

@@ -1,5 +1,13 @@
-// Version: 1.0.0
+// Version: 3.0.0
+type EdgeKind__14207600 = {#childOf; #spouseOriginOf};
 type EdgeKind__581750386 = {#childOf; #spouseOriginOf};
+type EdgeRecord__4615760 =
+  {
+    fromFamilyId : Text;
+    kind : EdgeKind__14207600;
+    toFamilyId : Text;
+    viaPersonName : Text
+  };
 type EdgeRecord__612637724 =
   {
     fromFamilyId : Text;
@@ -15,9 +23,28 @@ type FamilyRecord__112432018 =
     parentFamilyId : ?Text;
     rootName : Text
   };
+type FamilyRecord__870941087 =
+  {
+    canisterId : Principal;
+    createdAt : Int;
+    familyId : Text;
+    parentFamilyId : ?Text;
+    rootName : Text
+  };
+type List__415060402<T> = List__790383201<T>;
+type List__790383201<T> =
+  {
+    var blockIndex : Nat__490723111;
+    var blocks : [var [var ?T]];
+    var elementIndex : Nat__490723111
+  };
 type Nat__490723111 = Nat__920180692;
 type Nat__920180692 = Nat;
-actor {
+actor ({
+  in edges : List__415060402<EdgeRecord__4615760>;
+  in families : List__415060402<FamilyRecord__870941087>;
+  in state : {var nextFamilyIndex : Nat}
+}, {
   stable edges :
     {
       var blockIndex : Nat__490723111;
@@ -31,4 +58,4 @@ actor {
       var elementIndex : Nat__490723111
     };
   stable state : {var nextFamilyIndex : Nat}
-};
+});

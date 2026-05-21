@@ -5,7 +5,9 @@ import Cycles "mo:base/ExperimentalCycles";
 import Family "Family";
 import Principal "mo:core/Principal";
 
-actor {
+import Migration "migration";
+
+(with migration = Migration.run) actor {
 
   // --- Shared types (exported via bindgen) ---
   public type EdgeKind = { #childOf; #spouseOriginOf };
@@ -96,6 +98,9 @@ actor {
       };
     };
   };
+
+  /// Return the current build stamp — changes on every upgrade so upgrades are observable.
+  public query func getBuildStamp() : async Text { return "build-2" };
 
   /// Call the child canister's whoAmI() and return its response.
   public func pingChild(familyId : Text) : async { #ok : Text; #err : Text } {

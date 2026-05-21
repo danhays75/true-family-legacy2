@@ -26,6 +26,10 @@ export enum EdgeKind {
 }
 export interface backendInterface {
     /**
+     * / Return the current build stamp — changes on every upgrade so upgrades are observable.
+     */
+    getBuildStamp(): Promise<string>;
+    /**
      * / Add a relationship edge between two existing families.
      */
     linkFamilies(fromFamilyId: string, toFamilyId: string, kind: EdgeKind, viaPersonName: string): Promise<{

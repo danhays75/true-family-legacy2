@@ -19,6 +19,8 @@ type EdgeKind =
    spouseOriginOf;
  };
 service : {
+  /// Return the current build stamp — changes on every upgrade so upgrades are observable.
+  getBuildStamp: () -> (text) query;
   /// Add a relationship edge between two existing families.
   linkFamilies: (fromFamilyId: text, toFamilyId: text, kind: EdgeKind,
    viaPersonName: text) -> (variant {

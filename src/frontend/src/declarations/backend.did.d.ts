@@ -27,6 +27,10 @@ export interface FamilyRecord {
 }
 export interface _SERVICE {
   /**
+   * / Return the current build stamp — changes on every upgrade so upgrades are observable.
+   */
+  'getBuildStamp' : ActorMethod<[], string>,
+  /**
    * / Add a relationship edge between two existing families.
    */
   'linkFamilies' : ActorMethod<

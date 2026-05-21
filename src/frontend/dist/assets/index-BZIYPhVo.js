@@ -27274,6 +27274,7 @@ const FamilyRecord = Record({
   "canisterId": Principal2
 });
 Service({
+  "getBuildStamp": Func([], [Text], ["query"]),
   "linkFamilies": Func(
     [Text, Text, EdgeKind$1, Text],
     [Variant({ "ok": Null, "err": Text })],
@@ -27316,6 +27317,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "canisterId": IDL2.Principal
   });
   return IDL2.Service({
+    "getBuildStamp": IDL2.Func([], [IDL2.Text], ["query"]),
     "linkFamilies": IDL2.Func(
       [IDL2.Text, IDL2.Text, EdgeKind2, IDL2.Text],
       [IDL2.Variant({ "ok": IDL2.Null, "err": IDL2.Text })],
@@ -27362,6 +27364,20 @@ class Backend {
     this._uploadFile = _uploadFile;
     this._downloadFile = _downloadFile;
     this.processError = processError2;
+  }
+  async getBuildStamp() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getBuildStamp();
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getBuildStamp();
+      return result;
+    }
   }
   async linkFamilies(arg0, arg1, arg2, arg3) {
     if (this.processError) {
@@ -27541,6 +27557,7 @@ function App() {
   const [families, setFamilies] = reactExports.useState([]);
   const [edges, setEdges] = reactExports.useState([]);
   const [loading, setLoading] = reactExports.useState(true);
+  const [buildStamp, setBuildStamp] = reactExports.useState("");
   const [plantRootName, setPlantRootName] = reactExports.useState("");
   const [plantParent, setPlantParent] = reactExports.useState("");
   const [plantResult, setPlantResult] = reactExports.useState(null);
@@ -27570,13 +27587,16 @@ function App() {
   }, [actor]);
   reactExports.useEffect(() => {
     if (!actor) return;
-    Promise.all([actor.listFamilies(), actor.listEdges()]).then(
-      ([fams, eds]) => {
-        setFamilies(fams);
-        setEdges(eds);
-        setLoading(false);
-      }
-    );
+    Promise.all([
+      actor.listFamilies(),
+      actor.listEdges(),
+      actor.getBuildStamp()
+    ]).then(([fams, eds, stamp]) => {
+      setFamilies(fams);
+      setEdges(eds);
+      setBuildStamp(stamp);
+      setLoading(false);
+    });
   }, [actor]);
   async function handlePlant(e) {
     e.preventDefault();
@@ -27673,7 +27693,11 @@ function App() {
         fontFamily: "monospace"
       },
       children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { fontSize: 18, fontWeight: "bold", marginBottom: 24 }, children: "True Family Legacy — Factory Diagnostic Harness" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { fontSize: 18, fontWeight: "bold", marginBottom: 8 }, children: "True Family Legacy — Factory Diagnostic Harness" }),
+        buildStamp && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { fontSize: 12, marginBottom: 24, fontFamily: "monospace" }, children: [
+          "Factory build: ",
+          buildStamp
+        ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "section",
           {

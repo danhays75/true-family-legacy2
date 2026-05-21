@@ -108,6 +108,10 @@ export enum EdgeKind {
 }
 export interface backendInterface {
     /**
+     * / Return the current build stamp — changes on every upgrade so upgrades are observable.
+     */
+    getBuildStamp(): Promise<string>;
+    /**
      * / Add a relationship edge between two existing families.
      */
     linkFamilies(fromFamilyId: string, toFamilyId: string, kind: EdgeKind, viaPersonName: string): Promise<{
@@ -150,6 +154,20 @@ export interface backendInterface {
 import type { EdgeKind as _EdgeKind, EdgeRecord as _EdgeRecord, FamilyRecord as _FamilyRecord } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
+    async getBuildStamp(): Promise<string> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getBuildStamp();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getBuildStamp();
+            return result;
+        }
+    }
     async linkFamilies(arg0: string, arg1: string, arg2: EdgeKind, arg3: string): Promise<{
         __kind__: "ok";
         ok: null;

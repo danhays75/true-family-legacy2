@@ -27,6 +27,7 @@ export const FamilyRecord = IDL.Record({
 });
 
 export const idlService = IDL.Service({
+  'getBuildStamp' : IDL.Func([], [IDL.Text], ['query']),
   'linkFamilies' : IDL.Func(
       [IDL.Text, IDL.Text, EdgeKind, IDL.Text],
       [IDL.Variant({ 'ok' : IDL.Null, 'err' : IDL.Text })],
@@ -73,6 +74,7 @@ export const idlFactory = ({ IDL }) => {
   });
   
   return IDL.Service({
+    'getBuildStamp' : IDL.Func([], [IDL.Text], ['query']),
     'linkFamilies' : IDL.Func(
         [IDL.Text, IDL.Text, EdgeKind, IDL.Text],
         [IDL.Variant({ 'ok' : IDL.Null, 'err' : IDL.Text })],
